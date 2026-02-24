@@ -1,4 +1,4 @@
+numpy
 pre-commit
 pytest
 torch==2.10.0
-numpy

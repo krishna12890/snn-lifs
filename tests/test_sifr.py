@@ -1,6 +1,7 @@
 import math
-import torch
+
 import pytest
+import torch
 
 from src.sifr import sifr
 
@@ -28,7 +29,9 @@ def test_sifr_basic_values():
 
     for i, exp in enumerate(expected):
         val = Vm[0, i, 0].item()
-        assert math.isclose(val, exp, rel_tol=1e-6, abs_tol=1e-6), f"index {i}: {val} != {exp}"
+        assert math.isclose(
+            val, exp, rel_tol=1e-6, abs_tol=1e-6
+        ), f"index {i}: {val} != {exp}"
 
 
 def test_sifr_trailing_dims_shape():
