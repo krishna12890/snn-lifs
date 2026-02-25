@@ -8,7 +8,7 @@ from src.lifs import lifs
 BASIC_TEST_PATTERNS = {
     "simple_no_spike": {
         "input": torch.tensor([[0.2, 0.3, 0.4]]),
-        "lam": 0.5,
+        "lam": 0.25,
         "vth": 0.5,
         "expected": torch.tensor([[0.0, 0.0, 0.0]]),
     },
