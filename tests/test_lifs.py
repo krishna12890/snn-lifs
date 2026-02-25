@@ -5,6 +5,34 @@ import torch
 
 from src.lifs import lifs
 
+BASIC_TEST_PATTERNS = {
+    "simple_no_spike": {
+        "input": torch.tensor([[0.2, 0.3, 0.4]]),
+        "lam": 0.5,
+        "vth": 0.5,
+        "expected": torch.tensor([[0.0, 0.0, 0.0]]),
+    },
+    "simple_spike": {
+        "input": torch.tensor([[0.6, 0.2, 0.3]]),
+        "lam": 0.5,
+        "vth": 0.5,
+        "expected": torch.tensor([[1.0, 0.0, 0.0]]),
+    },
+}
+
+
+@pytest.mark.parametrize("test_pattern", list(BASIC_TEST_PATTERNS.keys()))
+def test_lifs_fuctional(test_pattern):
+    pattern = BASIC_TEST_PATTERNS[test_pattern]
+    x = pattern["input"]
+    lam = pattern["lam"]
+    vth = pattern["vth"]
+    expected = pattern["expected"]
+
+    spikes = lifs(x, lam, vth)
+    assert spikes.shape == expected.shape
+    assert torch.allclose(spikes, expected)
+
 
 def test_lifs_basic_values():
     x = torch.tensor([[3.0, -8.0, 7.0]])  # shape (B=1, T=3, D=0)
