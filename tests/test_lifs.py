@@ -22,12 +22,15 @@ BASIC_TEST_PATTERNS = {
 
 
 @pytest.mark.parametrize("test_pattern", list(BASIC_TEST_PATTERNS.keys()))
-def test_lifs_fuctional(test_pattern):
+@pytest.mark.parametrize("device", ["cpu", "cuda"])
+def test_lifs_fuctional(test_pattern, device):
+    if device == "cuda" and not torch.cuda.is_available():
+        pytest.skip("CUDA is not available")
     pattern = BASIC_TEST_PATTERNS[test_pattern]
-    x = pattern["input"]
+    x = pattern["input"].to(device)
     lam = pattern["lam"]
     vth = pattern["vth"]
-    expected = pattern["expected"]
+    expected = pattern["expected"].to(device)
 
     spikes = lifs(x, lam, vth)
     assert spikes.shape == expected.shape
