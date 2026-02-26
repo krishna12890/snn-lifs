@@ -33,6 +33,7 @@ def test_lifs_fuctional(test_pattern, device):
     expected = pattern["expected"].to(device)
 
     spikes = lifs(x, lam, vth)
+
     assert spikes.shape == expected.shape
     assert torch.allclose(spikes, expected)
 
