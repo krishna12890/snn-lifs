@@ -93,3 +93,31 @@ def test_lifs_requires_kwargs():
     x = torch.zeros(1, 3, 1)
     with pytest.raises(AssertionError):
         lifs(x, lam=None, vth=0.5)
+
+
+def test_autograd_differentiable():
+    class SpikingMAC(torch.nn.Module):
+        def __init__(self, in_dim, lam=0.2, vth=0.5):
+            super().__init__()
+            self.dot = torch.nn.Linear(in_dim, 1)
+            self.lam = lam
+            self.vth = vth
+
+        def forward(self, x):
+            x = self.dot(x)
+            return lifs(x, self.lam, self.vth)
+
+    x = torch.tensor([[1.2, -0.3, 0.8]])
+
+    model = SpikingMAC(in_dim=3, lam=0.2, vth=0.5)
+    spikes = model(x)
+
+    assert spikes.shape == (1, 1)
+    assert torch.all((spikes == 0) | (spikes == 1))
+
+    assert model.dot.weight.requires_grad
+    assert model.dot.bias.requires_grad
+
+    spikes.sum().backward()
+    assert model.dot.weight.grad is not None
+    assert model.dot.bias.grad is not None
