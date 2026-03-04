@@ -1,5 +1,7 @@
 import torch
 
+from src.straight_through_estimator import SpikeSTE
+
 
 def lifs(x, lam, vth):
     if lam is None:
@@ -19,6 +21,10 @@ def lifs(x, lam, vth):
         input_x = x[:, n, ...]
         Vm[:, n, ...] = torch.where(prev_vm < vth, lam * prev_vm + input_x, input_x)
 
-    output = torch.where(Vm >= vth, 1.0, 0.0)  # binary spike output
+    # output = torch.where(Vm >= vth, 1.0, 0.0)  # binary spike output
+    # using ste to allow gradients to pass through the non-differentiable thresholding operation
+
+    slope = 1.0  # STE slope
+    output = SpikeSTE.apply(Vm, vth, slope)
 
     return output
