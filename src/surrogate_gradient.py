@@ -1,7 +1,7 @@
 import torch
 
 
-class SpikeSTE(torch.autograd.Function):
+class SurrogateGrad(torch.autograd.Function):
     @staticmethod
     def forward(ctx, u, vth, slope: float = 10.0):
         """
@@ -12,7 +12,7 @@ class SpikeSTE(torch.autograd.Function):
         if not torch.is_tensor(vth):
             vth = torch.tensor(vth, device=u.device, dtype=u.dtype)
 
-        # Hard binary spike (passes your assertion)
+        # Hard binary spike
         out = (u >= vth).to(u.dtype)
 
         # Save for backward
