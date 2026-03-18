@@ -1,6 +1,6 @@
 import torch
 
-from .lifs_ste import ste_lifs
+from .ste import StraightThroughEstimator
 
 
 def lifs(x, lam, vth):
@@ -21,6 +21,6 @@ def lifs(x, lam, vth):
         input_x = x[:, n, ...]
         Vm[:, n, ...] = torch.where(prev_vm < vth, lam * prev_vm + input_x, input_x)
 
-    output = ste_lifs(Vm - vth)
+    output = StraightThroughEstimator(Vm - vth)
 
     return output

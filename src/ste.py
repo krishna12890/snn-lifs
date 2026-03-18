@@ -1,7 +1,7 @@
 import torch
 
 
-def ste_lifs(x: torch.Tensor) -> torch.Tensor:
+def StraightThroughEstimator(x: torch.Tensor) -> torch.Tensor:
     surrogate = x
 
     return (
