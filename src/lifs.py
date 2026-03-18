@@ -1,6 +1,6 @@
 import torch
 
-from .surrogate_gradient import SurrogateGrad
+from .lifs_ste import ste_lifs
 
 
 def lifs(x, lam, vth):
@@ -21,7 +21,6 @@ def lifs(x, lam, vth):
         input_x = x[:, n, ...]
         Vm[:, n, ...] = torch.where(prev_vm < vth, lam * prev_vm + input_x, input_x)
 
-    slope = 1.0  # STE slope
-    output = SurrogateGrad.apply(Vm, vth, slope)
+    output = ste_lifs(Vm - vth)
 
     return output
